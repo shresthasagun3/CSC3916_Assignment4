@@ -4,6 +4,9 @@ File: Server.js
 Description: Web API scaffolding for Movie API
  */
 
+require('dotenv').config();
+const mongoose = require('mongoose');
+
 var express = require('express');
 var bodyParser = require('body-parser');
 var passport = require('passport');
@@ -238,9 +241,9 @@ router.route ('/reviews')
 
         await review.save(); 
         res.status(201).json({message: 'Review created.'}); 
-    } catch (err){
-        console.error(err); 
-        res.status(500).json({success: false, message: 'Error saving review.'})
+    } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message }); 
     }
 });
 
