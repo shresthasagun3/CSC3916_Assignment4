@@ -137,9 +137,28 @@ router.route('/movies')
   });
 
 router.route('/movies/:title')
-
   .get(authJwtController.isAuthenticated, async (req, res) => {
     try {
+    //modified added code 
+    if (req.query.reviews === 'true') {
+        const movieWithReviews = await Movie.aggregate ([
+            { $match: {title : req.params.title}},
+            {
+                $lookup: {
+                    from: 'reviews', 
+                    localField: '_id', 
+                    foreignField: 'movieId', 
+                    as: 'reviews'
+                }
+            }
+        ]); 
+        if (!movieWithReviews.length){
+            return res.status(404).json({ success: false, message: 'Movie not found.'});
+        }
+        return res.status(200).json({success: true, movie: movieWithReviews[0]});
+    }
+
+    //Assignment 3 normal code
       const movie = await Movie.findOne({ title: req.params.title });
       if (!movie) {
         return res.status(404).json({ success: false, message: 'Movie not found.' });
@@ -192,15 +211,40 @@ router.route('/movies/:title')
     }
   });
 
-
-router.get('/', async (req, res) =>{
+//REVIEW ROUTES 
+router.route ('/reviews')
+  .get(authJwtController.isAuthenticated, async(req, res)=>{
     try{
         const reviews = await Review.find(); 
-        res.json(reviews); 
+        res.status(200).json({success: true, reviews});
     } catch (err) {
-        res.status(500).json({message: err.message});
+        console.error(err); 
+        res.status(500).json({success: false, message: 'Error retrieving reviews.'})
+    }
+  })
+  .post(authJwtController.isAuthenticated, async(req, res) => {
+    try{
+        const movie = await Movie.findById(req.body.movieId); 
+        if (!movie) {
+            return res.status(404).json({success: false, message: 'Movie not found.'})
+        }
+
+        const review = new Review({
+            movieId: req.body.movieId,
+            username: req.user.username,
+            review: req.body.review, 
+            rating: req.body.rating,
+        });
+
+        await review.save(); 
+        res.status(201).json({message: 'Review created.'}); 
+    } catch (err){
+        console.error(err); 
+        res.status(500).json({success: false, message: 'Error saving review.'})
     }
 });
+
+
 
 
 app.use('/', router);
