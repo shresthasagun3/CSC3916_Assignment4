@@ -15,6 +15,17 @@ var User = require('./Users');
 var Movie = require('./Movies');
 var Review = require('./Reviews');
 
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.DB);
+    console.log('Connected to MongoDB');
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    process.exit(1);
+  }
+};
+connectDB();
+
 var app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -86,6 +97,101 @@ router.post('/signin', function (req, res) {
         })
     })
 });
+
+// Movie routes from Assignment 3 
+router.route('/movies')
+  .get(authJwtController.isAuthenticated, async (req, res) => {
+    try {
+      const movies = await Movie.find();
+      res.status(200).json({ success: true, movies });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: 'Error retrieving movies.' });
+    }
+  })
+  .post(authJwtController.isAuthenticated, async (req, res) => {
+    const { title, releaseDate, genre, actors } = req.body;
+    if (!title || !releaseDate || !genre || !actors || actors.length < 3) {
+      return res.status(400).json({
+        success: false,
+        message: 'Movie must include title, releaseDate, genre, and at least three actors.',
+      });
+    }
+    try {
+      const movie = new Movie({ title, releaseDate, genre, actors });
+      await movie.save();
+      res.status(201).json({ success: true, msg: 'Movie created successfully.', movie });
+    } catch (err) {
+      console.error(err);
+      if (err.name === 'ValidationError') {
+        return res.status(400).json({ success: false, message: err.message });
+      }
+      res.status(500).json({ success: false, message: 'Error saving movie.' });
+    }
+  })
+  .put(authJwtController.isAuthenticated, (req, res) => {
+    res.status(405).json({ success: false, message: 'PUT not supported on /movies. Use /movies/:title.' });
+  })
+  .delete(authJwtController.isAuthenticated, (req, res) => {
+    res.status(405).json({ success: false, message: 'DELETE not supported on /movies. Use /movies/:title.' });
+  });
+
+router.route('/movies/:title')
+
+  .get(authJwtController.isAuthenticated, async (req, res) => {
+    try {
+      const movie = await Movie.findOne({ title: req.params.title });
+      if (!movie) {
+        return res.status(404).json({ success: false, message: 'Movie not found.' });
+      }
+      res.status(200).json({ success: true, movie });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: 'Error retrieving movie.' });
+    }
+  })
+
+  .post(authJwtController.isAuthenticated, (req, res) => {
+    res.status(405).json({ success: false, message: 'POST not supported on /movies/:title. Use /movies.' });
+  })
+
+  .put(authJwtController.isAuthenticated, async (req, res) => {
+    try {
+      const updatedMovie = await Movie.findOneAndUpdate(
+        { title: req.params.title },
+        req.body,
+        { new: true, runValidators: true }
+      );
+ 
+      if (!updatedMovie) {
+        return res.status(404).json({ success: false, message: 'Movie not found.' });
+      }
+ 
+      res.status(200).json({ success: true, msg: 'Movie updated successfully.', movie: updatedMovie });
+    } catch (err) {
+      console.error(err);
+      if (err.name === 'ValidationError') {
+        return res.status(400).json({ success: false, message: err.message });
+      }
+      res.status(500).json({ success: false, message: 'Error updating movie.' });
+    }
+  })
+
+  .delete(authJwtController.isAuthenticated, async (req, res) => {
+    try {
+      const deletedMovie = await Movie.findOneAndDelete({ title: req.params.title });
+ 
+      if (!deletedMovie) {
+        return res.status(404).json({ success: false, message: 'Movie not found.' });
+      }
+ 
+      res.status(200).json({ success: true, msg: 'Movie deleted successfully.' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: 'Error deleting movie.' });
+    }
+  });
+
 
 router.get('/', async (req, res) =>{
     try{
