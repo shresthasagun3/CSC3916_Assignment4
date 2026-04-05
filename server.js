@@ -87,6 +87,16 @@ router.post('/signin', function (req, res) {
     })
 });
 
+router.get('/', async (req, res) =>{
+    try{
+        const reviews = await Review.find(); 
+        res.json(reviews); 
+    } catch (err) {
+        res.status(500).json({message: err.message});
+    }
+});
+
+
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
 module.exports = app; // for testing only
