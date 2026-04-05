@@ -65,3 +65,26 @@ Leverage the Async.js library or mongo $lookup aggregation capability to join th
 - https://cloud.google.com/appengine/docs/flexible/nodejs/integrating-with-analytics
 - https://caolan.github.io/async/index.html
 - https://support.google.com/analytics/answer/2709829
+
+Postman: 
+<div class="postman-run-button"
+data-postman-action="collection/fork"
+data-postman-visibility="public"
+data-postman-var-1="52006563-3a33c3cd-abc9-44b9-a9df-cd74094a56ac"
+data-postman-collection-url="entityId=52006563-3a33c3cd-abc9-44b9-a9df-cd74094a56ac&entityType=collection&workspaceId=1285a7d8-0a92-4fb4-b986-114ef38aaf27"
+data-postman-param="env%5Bshrestha-hw4%5D=W3sia2V5IjoidXJsIiwidmFsdWUiOiIiLCJlbmFibGVkIjp0cnVlLCJ0eXBlIjoiZGVmYXVsdCIsInNlc3Npb25WYWx1ZSI6Imh0dHBzOi8vY3NjMzkxNi1hc3NpZ25tZW50NC14djF3Lm9ucmVuZGVyLmNvbSIsImNvbXBsZXRlU2Vzc2lvblZhbHVlIjoiaHR0cHM6Ly9jc2MzOTE2LWFzc2lnbm1lbnQ0LXh2MXcub25yZW5kZXIuY29tIiwic2Vzc2lvbkluZGV4IjowfSx7ImtleSI6InRva2VuIiwidmFsdWUiOiIiLCJlbmFibGVkIjp0cnVlLCJ0eXBlIjoiZGVmYXVsdCIsInNlc3Npb25WYWx1ZSI6IkpXVC4uLiIsImNvbXBsZXRlU2Vzc2lvblZhbHVlIjoiSldUIGV5SmhiR2NpT2lKSVV6STFOaUlzSW5SNWNDSTZJa3BYVkNKOS5leUpwWkNJNklqWTVaREpqTXpsa1lUaGtNR0ZqTmpZd1pXWTJPVEkxWmlJc0luVnpaWEp1WVcxbElqb2lZM1ZmZFhObGNpSXNJbWxoZENJNk1UYzNOVFF5T0RVek9YMC56Tnc4emlFaEI3dXhFUEUzYTJpNlFodG5JMGtzNXFEMEFlQ1RIWmowTVRVIiwic2Vzc2lvbkluZGV4IjoxfV0="></div>
+<script type="text/javascript">
+  (function (p,o,s,t,m,a,n) {
+    !p[s] && (p[s] = function () { (p[t] || (p[t] = [])).push(arguments); });
+    !o.getElementById(s+t) && o.getElementsByTagName("head")[0].appendChild((
+      (n = o.createElement("script")),
+      (n.id = s+t), (n.async = 1), (n.src = m), n
+    ));
+  }(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
+</script>
+
+Variable        |   Value 
+url             | https://csc3916-assignment4-xv1w.onrender.com
+token           |
+
+Note, I also exported the postman files into a folder. 

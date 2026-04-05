@@ -1,0 +1,274 @@
+{
+  "info": {
+    "_postman_id": "3a33c3cd-abc9-44b9-a9df-cd74094a56ac",
+    "name": "CSCI3916-HW4",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52006563",
+    "_collection_link": "https://go.postman.co/collection/52006563-3a33c3cd-abc9-44b9-a9df-cd74094a56ac?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "signup",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Test User\",\n    \"username\": \"cu_user\",\n    \"password\": \"cu_rulez\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/signup",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "signup"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "signin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "pm.environment.set(\"token\", json.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"cu_user\",\n    \"password\": \"cu_rulez\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/signin",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "signin"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getmovies",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{url}}/movies",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "movies"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create movie",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Zodiac\",\n    \"releaseDate\": 2007,\n    \"genre\": \"Thriller\",\n    \"actors\": [\n        { \"actorName\": \"Jake Gyllenhaal\", \"characterName\": \"Robert Graysmith\" },\n        { \"actorName\": \"Mark Ruffalo\", \"characterName\": \"Dave Toschi\" },\n        { \"actorName\": \"Robert Downey Jr.\", \"characterName\": \"Paul Avery\" }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/movies",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "movies"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "movie request",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{url}}/movies/Zodiac",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "movies",
+            "Zodiac"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "failed movie request",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{url}}/movies/WrongMovie",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "movies",
+            "WrongMovie"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "movie request w/ review",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{url}}/movies/Zodiac?reviews=true",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "movies",
+            "Zodiac"
+          ],
+          "query": [
+            {
+              "key": "reviews",
+              "value": "true"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "valid review",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"movieId\": \"69d2c450a8d0ac660ef69291\",\n    \"review\": \"Great movie 10/10\",\n    \"rating\": 5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/reviews",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "reviews"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "invalid review",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"movieId\": \"000000000000000000000000\",\n    \"review\": \"Failed Review\",\n    \"rating\": 3\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/reviews",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "reviews"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
