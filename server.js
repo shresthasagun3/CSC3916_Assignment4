@@ -157,36 +157,40 @@ router.route('/movies')
     res.status(405).json({ success: false, message: 'DELETE not supported on /movies. Use /movies/:title.' });
   });
 
-router.route('/movies/:title')
+router.route('/movies/:id')
   .get(authJwtController.isAuthenticated, async (req, res) => {
     try {
-    //modified added code 
-    if (req.query.reviews === 'true') {
-        const movieWithReviews = await Movie.aggregate ([
-            { $match: {title : req.params.title}},
-            {
-                $lookup: {
-                    from: 'reviews', 
-                    localField: '_id', 
-                    foreignField: 'movieId', 
-                    as: 'reviews'
-                }
-            },
-            {
-        $addFields: {
-            avgRating: { $avg: '$reviews.rating' }
+      if (req.query.reviews === 'true') {
+        const movieWithReviews = await Movie.aggregate([
+          {
+            $match: mongoose.Types.ObjectId.isValid(req.params.id)
+              ? { _id: new mongoose.Types.ObjectId(req.params.id) }
+              : { title: req.params.id }
+          },
+          {
+            $lookup: {
+              from: 'reviews',
+              localField: '_id',
+              foreignField: 'movieId',
+              as: 'reviews'
+            }
+          },
+          {
+            $addFields: {
+              avgRating: { $avg: '$reviews.rating' }
+            }
+          }
+        ]);
+        if (!movieWithReviews.length) {
+          return res.status(404).json({ success: false, message: 'Movie not found.' });
         }
-    }
+        return res.status(200).json({ success: true, movie: movieWithReviews[0] });
+      }
 
-    ]); 
-        if (!movieWithReviews.length){
-            return res.status(404).json({ success: false, message: 'Movie not found.'});
-        }
-        return res.status(200).json({success: true, movie: movieWithReviews[0]});
-    }
+      const movie = mongoose.Types.ObjectId.isValid(req.params.id)
+        ? await Movie.findById(req.params.id)
+        : await Movie.findOne({ title: req.params.id });
 
-    //Assignment 3 normal code
-      const movie = await Movie.findOne({ title: req.params.title });
       if (!movie) {
         return res.status(404).json({ success: false, message: 'Movie not found.' });
       }
