@@ -26,7 +26,7 @@ const MovieSchema = new Schema({
         message: 'A movie must have at least three actors.',
     },
 },
-
+imageUrl: String,
 });
 
 
